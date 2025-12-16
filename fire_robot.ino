@@ -137,4 +137,91 @@ void motorDrive(int left_us, int right_us) {
     delayMicroseconds(left_us - right_us);
   } else if (right_us > left_us) {
     digitalWrite(ENA, LOW);
-    delayMicroseconds(r
+    delayMicroseconds(right_us - left_us);
+  }
+
+  digitalWrite(ENA, LOW);
+  digitalWrite(ENB, LOW);
+}
+
+// =================================================
+// LOOP
+// =================================================
+void loop() {
+
+  if (!client.connected()) connectMQTT();
+  client.loop();
+
+  // ===== JIKA API BARU PADAM → PUTAR 180 =====
+  if (fireJustExtinguished) {
+    digitalWrite(IN1, HIGH);
+    digitalWrite(IN2, LOW);
+    digitalWrite(IN3, LOW);
+    digitalWrite(IN4, HIGH);
+
+    motorDrive(200, 200);
+    delay(900);
+    motorStop();
+
+    fireJustExtinguished = false;
+  }
+
+  // ===== JIKA CV TIDAK IZINKAN → STOP =====
+  if (!cvFireAllowed) {
+    motorStop();
+    return;
+  }
+
+  // ===== LINE FOLLOWER =====
+  error = readError();
+  filteredError = alpha * filteredError + (1 - alpha) * error;
+
+  float P = filteredError;
+  float D = filteredError - lastError;
+  lastError = filteredError;
+
+  float output = Kp * P + Kd * D;
+
+  int leftPWM  = baseSpeed - output * 35;
+  int rightPWM = baseSpeed + output * 35;
+
+  digitalWrite(IN1, HIGH);
+  digitalWrite(IN2, LOW);
+  digitalWrite(IN3, HIGH);
+  digitalWrite(IN4, LOW);
+
+  motorDrive(leftPWM, rightPWM);
+}
+
+// =================================================
+// MQTT CALLBACK
+// =================================================
+void mqttCallback(char* topic, byte* payload, unsigned int length) {
+  String msg;
+  for (int i = 0; i < length; i++) msg += (char)payload[i];
+
+  if (msg == "ON") {
+    cvFireAllowed = true;
+    fireJustExtinguished = false;
+    Serial.println("📡 CV FIRE ON");
+  }
+
+  if (msg == "OFF") {
+    cvFireAllowed = false;
+    fireJustExtinguished = true;
+    Serial.println("📡 CV FIRE OFF");
+  }
+}
+
+// =================================================
+// CONNECT MQTT
+// =================================================
+void connectMQTT() {
+  while (!client.connected()) {
+    if (client.connect("ESP32_FIREBOT")) {
+      client.subscribe("fire/detect");
+    } else {
+      delay(2000);
+    }
+  }
+}
