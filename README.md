@@ -1,5 +1,7 @@
 # 🔥 Fire-Fighting Line Follower Robot
 
+<img width="1327" height="623" alt="image" src="https://github.com/user-attachments/assets/82065ff2-8237-48d8-b714-4dea31b81a23" />
+
 Robot **Line Follower berbasis ESP32-WROOM** yang terintegrasi dengan **Computer Vision (kamera laptop)** menggunakan **MQTT** sebagai protokol komunikasi.
 
 Robot **TIDAK akan bergerak** kecuali sistem Computer Vision mendeteksi api melalui kamera. Ketika api terdeteksi, robot akan mengikuti garis (line follower). Saat api padam, robot akan **berhenti dan berputar 180°**.
