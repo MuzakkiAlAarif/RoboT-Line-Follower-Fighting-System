@@ -1,6 +1,11 @@
 # 🔥 Fire-Fighting Line Follower Robot
 
-<img width="1327" height="623" alt="image" src="https://github.com/user-attachments/assets/82065ff2-8237-48d8-b714-4dea31b81a23" />
+<img width="1327" height="623" alt="image" src="https://github.com/MuzakkiAlAarif/RoboT-Line-Follower-Fighting-System/blob/main/kumbang%20badak.jpeg" />
+
+<img width="1327" height="623" alt="image" src="https://github.com/MuzakkiAlAarif/RoboT-Line-Follower-Fighting-System/blob/main/wiring%20schematic.png" />
+
+## Dokumentasi Video
+https://drive.google.com/drive/folders/1Zl2bPBADgyV54n89UK4QG29WAw35GJoh
 
 Robot **Line Follower berbasis ESP32-WROOM** yang terintegrasi dengan **Computer Vision (kamera laptop)** menggunakan **MQTT** sebagai protokol komunikasi.
 
